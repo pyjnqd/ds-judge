@@ -43,3 +43,5 @@ class Environment(jinja2.Environment):
     self.filters['format_size'] = misc.format_size
     self.filters['format_seconds'] = misc.format_seconds
     self.filters['base64_encode'] = misc.base64_encode
+
+    self.filters['help'] = help

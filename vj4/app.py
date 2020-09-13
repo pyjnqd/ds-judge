@@ -17,6 +17,7 @@ from vj4.util import json
 from vj4.util import options
 from vj4.util import tools
 
+
 options.define('debug', default=False, help='Enable debug mode.')
 options.define('static', default=True, help='Serve static files.')
 options.define('ip_header', default='', help='Header name for remote IP.')
@@ -69,7 +70,8 @@ class Application(web.Application):
 
     super(Application, self).__init__(
       debug=options.debug,
-      middlewares=middlewares
+      middlewares=middlewares,
+      client_max_size = 10 * 1024 ** 2
     )
     globals()[self.__class__.__name__] = lambda: self  # singleton
 
@@ -99,6 +101,8 @@ class Application(web.Application):
     from vj4.handler import ranking
     from vj4.handler import user
     from vj4.handler import i18n
+    from vj4.handler import report
+
     if options.static:
       self.router.add_static('/', static_path, name='static')
 
@@ -111,6 +115,7 @@ def route(url, name, global_route=False):
     Application().router.add_route('*', url, handler, name=name)
     Application().router.add_route('*', '/d/{domain_id}' + url, handler,
                                    name=name + '_with_domain_id')
+
     return handler
 
   return decorate

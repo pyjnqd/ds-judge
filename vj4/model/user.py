@@ -19,7 +19,7 @@ PROJECTION_ALL = None
 
 
 @argmethod.wrap
-async def add(uid: int, uname: str, password: str, mail: str, regip: str=''):
+async def add(uid: int, uname: str, _class: str, year: int, name: str, password: str, mail: str, regip: str=''):
   """Add a user."""
   validator.check_uname(uname)
   # TODO(iceboy): Filter uname by keywords.
@@ -39,6 +39,9 @@ async def add(uid: int, uname: str, password: str, mail: str, regip: str=''):
     await coll.insert_one({'_id': uid,
                            'uname': uname,
                            'uname_lower': uname_lower,
+                           '_class': _class,
+                           'year': year,
+                           'name': name,
                            'mail': mail,
                            'mail_lower': mail_lower,
                            'salt': salt,
@@ -220,4 +223,5 @@ async def ensure_indexes():
 
 
 if __name__ == '__main__':
+  # print(argmethod._methods)
   argmethod.invoke_by_args()

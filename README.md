@@ -162,3 +162,8 @@ No commercial use, except get permission from us.
 * [Jinja2 Documentation](http://jinja.pocoo.org/docs/)
 * [Motor: Asynchronous Python driver for MongoDB](http://motor.readthedocs.org/en/stable/)
 * [Webpack Module Bundler](https://webpack.js.org/)
+
+---
+## CLI Commands
+#### Add User
+`python -m vj4.model.user add -id uname class grade password email`

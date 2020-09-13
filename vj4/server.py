@@ -13,6 +13,7 @@ from coloredlogs import syslog
 from vj4 import app
 from vj4.util import options
 
+
 options.define('listen', default='http://127.0.0.1:8888', help='Server listening address.')
 options.define('prefork', default=1, help='Number of prefork workers.')
 options.define('syslog', default=False, help='Use syslog instead of stderr for logging.')
@@ -61,7 +62,9 @@ def main():
       break
     else:
       atexit.register(lambda: os.kill(pid, signal.SIGTERM))
-  web.run_app(app.Application(), sock=sock, access_log=None, shutdown_timeout=0)
+
+  vj = app.Application()
+  web.run_app(vj, sock=sock, access_log=None, shutdown_timeout=0)
 
 if __name__ == '__main__':
   sys.exit(main())

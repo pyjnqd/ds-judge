@@ -265,14 +265,14 @@ DOMAIN_SYSTEM = {
               ROLE_MEMBER: DEFAULT_PERMISSIONS,
               ROLE_ADMIN: ADMIN_PERMISSIONS},
     'gravatar': '',
-    'name': 'Vijos',
+    'name': 'DSJudge',
     'bulletin': ''
 }
 DOMAINS = [DOMAIN_SYSTEM]
 
 # Users.
 UID_SYSTEM = 0
-UNAME_SYSTEM = 'Vijos'
+UNAME_SYSTEM = 'DSJudge'
 USER_SYSTEM = {
     '_id': UID_SYSTEM,
     'uname': UNAME_SYSTEM,
@@ -295,6 +295,8 @@ USER_GUEST = {
     '_id': UID_GUEST,
     'uname': UNAME_GUEST,
     'uname_lower': UNAME_GUEST.strip().lower(),
+    '_class': '',
+    'year': -1,
     'mail': '',
     'mail_lower': '',
     'salt': '',
@@ -333,9 +335,7 @@ LEVELS = collections.OrderedDict([(10, 1),
                                   (1, 100)])
 
 # Footer extra HTMLs. TODO(iceboy): remove.
-FOOTER_EXTRA_HTMLS = ['© 2005 - 2020 <a href="https://vijos.org/">Vijos.org</a>', version.get(),
-                      '<a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow">' +
-                      '沪ICP备14040537号</a>']
+FOOTER_EXTRA_HTMLS = ['© 2019 - 2020 <a href="https://www.cs.sdu.edu.cn/">山东大学计算机科学与技术学院</a>']
 
 PROBLEM_CATEGORIES = collections.OrderedDict([
     ('动态规划', [
@@ -543,3 +543,9 @@ DEFAULT_VNODES = collections.OrderedDict([
     {'pic': None, 'name': 'ACM'}
   ])
 ])
+
+COURSE_ID = {0: "数据结构", 1: "线性代数", 2: "计算机程序设计"}
+NUMBER_TRANSLATE = {0: '零', 1: '一', 2: '二', 3: '三', 4: '四', 5: '五',
+                    6: '六', 7: '七', 8: '八', 9: '九', 10: '十', 11: '十一',
+                    12: '十二', 13: '十三', 14: '十四', 15: '十五', 16: '十六',
+                    17: '十七', 18: '十八', 19: '十九', 20: '二十'}

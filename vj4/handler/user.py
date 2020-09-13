@@ -38,107 +38,115 @@ class UserSettingsMixin(object):
 
 @app.route('/register', 'user_register', global_route=True)
 class UserRegisterHandler(base.Handler):
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
   async def get(self):
-    self.render('user_register.html')
-
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
-  @base.post_argument
-  @base.sanitize
-  @base.limit_rate('send_mail', 3600, 30)
-  async def post(self, *, mail: str):
-    validator.check_mail(mail)
-    if await user.get_by_mail(mail):
-      raise error.UserAlreadyExistError(mail)
-    rid, _ = await token.add(token.TYPE_REGISTRATION,
-                             options.registration_token_expire_seconds,
-                             mail=mail)
-    await self.send_mail(mail, 'Sign Up', 'user_register_mail.html',
-                         url=self.reverse_url('user_register_with_code', code=rid))
-    self.render('user_register_mail_sent.html')
+    raise error.NotFoundError(self.url)
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # async def get(self):
+  #   self.render('user_register.html')
+  #
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # @base.post_argument
+  # @base.sanitize
+  # @base.limit_rate('send_mail', 3600, 30)
+  # async def post(self, *, mail: str):
+  #   validator.check_mail(mail)
+  #   if await user.get_by_mail(mail):
+  #     raise error.UserAlreadyExistError(mail)
+  #   rid, _ = await token.add(token.TYPE_REGISTRATION,
+  #                            options.registration_token_expire_seconds,
+  #                            mail=mail)
+  #   await self.send_mail(mail, 'Sign Up', 'user_register_mail.html',
+  #                        url=self.reverse_url('user_register_with_code', code=rid))
+  #   self.render('user_register_mail_sent.html')
 
 
 @app.route('/register/{code}', 'user_register_with_code', global_route=True)
 class UserRegisterWithCodeHandler(base.Handler):
-  TITLE = 'user_register'
+  async def get(self):
+    raise error.NotFoundError(self.url)
 
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
-  @base.route_argument
-  @base.sanitize
-  async def get(self, *, code: str):
-    doc = await token.get(code, token.TYPE_REGISTRATION)
-    if not doc:
-      raise error.InvalidTokenError(token.TYPE_REGISTRATION, code)
-    self.render('user_register_with_code.html', mail=doc['mail'])
-
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
-  @base.route_argument
-  @base.post_argument
-  @base.sanitize
-  async def post(self, *, code: str, uname: str, password: str, verify_password: str):
-    doc = await token.get(code, token.TYPE_REGISTRATION)
-    if not doc:
-      raise error.InvalidTokenError(token.TYPE_REGISTRATION, code)
-    if password != verify_password:
-      raise error.VerifyPasswordError()
-    uid = await system.inc_user_counter()
-    await user.add(uid, uname, password, doc['mail'], self.remote_ip)
-    await token.delete(code, token.TYPE_REGISTRATION)
-    await self.update_session(new_saved=False, uid=uid)
-    self.json_or_redirect(self.reverse_url('domain_main'))
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # @base.route_argument
+  # @base.sanitize
+  # async def get(self, *, code: str):
+  #   doc = await token.get(code, token.TYPE_REGISTRATION)
+  #   if not doc:
+  #     raise error.InvalidTokenError(token.TYPE_REGISTRATION, code)
+  #   self.render('user_register_with_code.html', mail=doc['mail'])
+  #
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # @base.route_argument
+  # @base.post_argument
+  # @base.sanitize
+  # async def post(self, *, code: str, uname: str, password: str, verify_password: str):
+  #   doc = await token.get(code, token.TYPE_REGISTRATION)
+  #   if not doc:
+  #     raise error.InvalidTokenError(token.TYPE_REGISTRATION, code)
+  #   if password != verify_password:
+  #     raise error.VerifyPasswordError()
+  #   uid = await system.inc_user_counter()
+  #   await user.add(uid, uname, password, doc['mail'], self.remote_ip)
+  #   await token.delete(code, token.TYPE_REGISTRATION)
+  #   await self.update_session(new_saved=False, uid=uid)
+  #   self.json_or_redirect(self.reverse_url('domain_main'))
 
 
 @app.route('/lostpass', 'user_lostpass', global_route=True)
 class UserLostpassHandler(base.Handler):
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
   async def get(self):
-    self.render('user_lostpass.html')
+    raise error.NotFoundError(self.url)
 
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
-  @base.post_argument
-  @base.sanitize
-  @base.limit_rate('send_mail', 3600, 30)
-  async def post(self, *, mail: str):
-    validator.check_mail(mail)
-    udoc = await user.get_by_mail(mail)
-    if not udoc:
-      raise error.UserNotFoundError(mail)
-    rid, _ = await token.add(token.TYPE_LOSTPASS,
-                             options.lostpass_token_expire_seconds,
-                             uid=udoc['_id'])
-    await self.send_mail(mail, 'Lost Password', 'user_lostpass_mail.html',
-                         url=self.reverse_url('user_lostpass_with_code', code=rid),
-                         uname=udoc['uname'])
-    self.render('user_lostpass_mail_sent.html')
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # async def get(self):
+  #   self.render('user_lostpass.html')
+  #
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # @base.post_argument
+  # @base.sanitize
+  # @base.limit_rate('send_mail', 3600, 30)
+  # async def post(self, *, mail: str):
+  #   validator.check_mail(mail)
+  #   udoc = await user.get_by_mail(mail)
+  #   if not udoc:
+  #     raise error.UserNotFoundError(mail)
+  #   rid, _ = await token.add(token.TYPE_LOSTPASS,
+  #                            options.lostpass_token_expire_seconds,
+  #                            uid=udoc['_id'])
+  #   await self.send_mail(mail, 'Lost Password', 'user_lostpass_mail.html',
+  #                        url=self.reverse_url('user_lostpass_with_code', code=rid),
+  #                        uname=udoc['uname'])
+  #   self.render('user_lostpass_mail_sent.html')
 
 
 @app.route('/lostpass/{code}', 'user_lostpass_with_code', global_route=True)
 class UserLostpassWithCodeHandler(base.Handler):
-  TITLE = 'user_lostpass'
-
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
-  @base.route_argument
-  @base.sanitize
-  async def get(self, *, code: str):
-    tdoc = await token.get(code, token.TYPE_LOSTPASS)
-    if not tdoc:
-      raise error.InvalidTokenError(token.TYPE_LOSTPASS, code)
-    udoc = await user.get_by_uid(tdoc['uid'])
-    self.render('user_lostpass_with_code.html', uname=udoc['uname'])
-
-  @base.require_priv(builtin.PRIV_REGISTER_USER)
-  @base.route_argument
-  @base.post_argument
-  @base.sanitize
-  async def post(self, *, code: str, password: str, verify_password: str):
-    tdoc = await token.get(code, token.TYPE_LOSTPASS)
-    if not tdoc:
-      raise error.InvalidTokenError(token.TYPE_LOSTPASS, code)
-    if password != verify_password:
-      raise error.VerifyPasswordError()
-    await user.set_password(tdoc['uid'], password)
-    await token.delete(code, token.TYPE_LOSTPASS)
-    self.json_or_redirect(self.reverse_url('domain_main'))
+  async def get(self):
+    raise error.NotFoundError(self.url)
+  # TITLE = 'user_lostpass'
+  #
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # @base.route_argument
+  # @base.sanitize
+  # async def get(self, *, code: str):
+  #   tdoc = await token.get(code, token.TYPE_LOSTPASS)
+  #   if not tdoc:
+  #     raise error.InvalidTokenError(token.TYPE_LOSTPASS, code)
+  #   udoc = await user.get_by_uid(tdoc['uid'])
+  #   self.render('user_lostpass_with_code.html', uname=udoc['uname'])
+  #
+  # @base.require_priv(builtin.PRIV_REGISTER_USER)
+  # @base.route_argument
+  # @base.post_argument
+  # @base.sanitize
+  # async def post(self, *, code: str, password: str, verify_password: str):
+  #   tdoc = await token.get(code, token.TYPE_LOSTPASS)
+  #   if not tdoc:
+  #     raise error.InvalidTokenError(token.TYPE_LOSTPASS, code)
+  #   if password != verify_password:
+  #     raise error.VerifyPasswordError()
+  #   await user.set_password(tdoc['uid'], password)
+  #   await token.delete(code, token.TYPE_LOSTPASS)
+  #   self.json_or_redirect(self.reverse_url('domain_main'))
 
 
 @app.route('/login', 'user_login', global_route=True)
