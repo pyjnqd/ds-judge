@@ -2,6 +2,7 @@ import asyncio
 import collections
 import datetime
 import io
+import os
 import pytz
 import yaml
 import zipfile
@@ -152,11 +153,8 @@ class ReportDetailHandler(contest.ContestMixin, base.OperationHandler):
   async def get(self, *, rid: objectid.ObjectId, page: int = 1):
     report = mdb.report.find_one({'_id': rid})
 
-    stu_report = mdb.ureport.find_one({'report_id': report['_id'], 'user_id': self.user['_id']})
+    ureport = mdb.ureport.find_one({'report_id': report['_id'], 'user_id': self.user['_id']})
 
-    attended = True
-    if not stu_report:
-      attended = False
 
     # tsdoc, pdict = await asyncio.gather(
     #     contest.get_status(self.domain_id, document.TYPE_HOMEWORK, tdoc['doc_id'], self.user['_id']),
@@ -193,7 +191,7 @@ class ReportDetailHandler(contest.ContestMixin, base.OperationHandler):
     self.render(
       'report_detail.html',
       tdoc=report,
-      pdoc=stu_report,
+      pdoc=ureport,
       attended=True,
       page=page,
       datetime_stamp=self.datetime_stamp,
@@ -213,10 +211,21 @@ class ReportDetailHandler(contest.ContestMixin, base.OperationHandler):
     self.json_or_redirect(self.url)
 
 
-# @app.route('/report/download', 'report_download')
-# class reportDetailHandler(contest.ContestMixin, base.OperationHandler):
-#   async def post(self):
-#     user_id = self.user['_id']
+@app.route('/report/{rid}/download', 'report_download')
+class ReportDownloadHandler(contest.ContestMixin, base.Handler):
+  @base.route_argument
+  @base.post_argument
+  @base.require_csrf_token
+  @base.require_priv(builtin.PRIV_USER_PROFILE)
+  @base.require_perm(builtin.PERM_ATTEND_HOMEWORK)
+  @base.sanitize
+  async def post(self, rid: objectid.ObjectId):
+    user_id = self.user['_id']
+    ureport = mdb.ureport.find_one({'user_id': user_id, 'report_id': rid})
+    file_name = ureport['data']
+    with open('data/%s' % file_name, 'rb') as fb:
+      await self.binary(fb.read(), file_name=file_name)
+
 
 @app.route('/report/{rid}/upload', 'report_upload')
 class ReportUploadHandler(base.Handler):
@@ -244,6 +253,10 @@ class ReportUploadHandler(base.Handler):
     this_report = mdb.report.find_one({"_id": rid})
     report_id = this_report['_id']
 
+    report_deadline = pytz.utc.localize(this_report['end_at']).astimezone(self.timezone)
+    if upload_time > report_deadline:
+      raise error.HomeworkNotLiveError()
+
     if report_rename(student, this_report, file_extension) is not None:
       file_name = report_rename(student, this_report, file_extension)
 
@@ -251,12 +264,19 @@ class ReportUploadHandler(base.Handler):
       f.write(file_data.read())
 
     ureport = mdb.ureport.find_one({'user_id': uid, 'report_id': report_id})
+    pdoc = None
     if ureport:
-      mdb.ureport.update_one({'user_id': uid, 'report_id': report_id},
-                             {"$set":
-                                {"data": file_name}
-                              })
-      
+      os.unlink('data/%s' % ureport['data'])
+      pdoc = mdb.ureport.update_one({'user_id': uid, 'report_id': report_id}, {"$set": {"data": file_name, "upload_time": upload_time}})
+    else:
+      pdoc = mdb.ureport.insert_one({
+        '_id': objectid.ObjectId(),
+        'user_id': uid,
+        'report_id': report_id,
+        'data': file_name,
+        'upload_time': upload_time})
+
+
     # if report.report_rename(student, report) is not None:
     #   file_name = report.report_rename(student, report)
     # ureport = mdb.find_one({'user_id': uid, 'report_id': report_id})
@@ -276,7 +296,7 @@ class ReportUploadHandler(base.Handler):
     # if pdoc.get('data') and type(pdoc['data']) is objectid.ObjectId:
     #   await fs.unlink(pdoc['data'])
     # await problem.set_data(self.domain_id, pid, file)
-    self.json_or_redirect(self.reverse_url('report_detail', rid=rid))
+    self.json_or_redirect(self.reverse_url('report_detail', rid=rid, ))
 
 
 @app.route('/report/{rid:\w{24}}/edit', 'report_edit')
@@ -349,4 +369,4 @@ class ReportEditHandler(contest.ContestMixin, base.Handler):
                            })
 
     pdoc = mdb.ureport.find_one({'user_id': self.user['_id'], 'report_id': rid})
-    self.json_or_redirect(self.reverse_url('report_detail', rid=rid, tdoc=tdoc, pdoc=pdoc))
+    self.json_or_redirect(self.reverse_url('report_detail', rid=rid))

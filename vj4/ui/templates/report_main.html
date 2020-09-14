@@ -44,6 +44,9 @@
                   <li>
                     {{ _('Status') }}: <span class="homework-status--text {{ handler.get_status(tdoc) }}">{{ _(handler.status_text(tdoc)) }}</span>
                   </li>
+                    <li>
+                    {{ _('Course') }}: {{ vj4.model.builtin.COURSE_ID[tdoc['course']] }}
+                  </li>
                   <li>
                     {{ _('Open Since') }}: {{ datetime_span(tdoc['begin_at']) }}
                   </li>

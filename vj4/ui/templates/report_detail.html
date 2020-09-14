@@ -27,7 +27,7 @@
                         <div class="section__body">
                             <form method="post" action="/report/{{ tdoc['_id'] }}/upload" target="_self" enctype="multipart/form-data">
                                     <p>{{ _('Current report: {0}').format(pdoc['data']|default(_('(None)'))) }}</p>
-                                    <p>{{ _('MD5: {0}').format(md5|default(_('(None)'))) }}</p>
+
                                 <p>
                                     {{ _('Update report') }}:
                                     <input type="hidden" name="csrf_token" value="{{ handler.csrf_token }}">
@@ -37,7 +37,8 @@
                             </form>
                             <p class="help-text">{{ _('Hint') }}: <a href="{{ reverse_url('wiki_help') }}#upload">{{ _('Dataset Format') }}</a>, {{ _('An example of dataset') }}: <a href="https://github.com/vijos/jd4/blob/master/jd4/testdata/aplusb-legacy.zip?raw=true">{{ _('Download') }}</a></p>
                             {% if pdoc %}
-                                <form action="{{ reverse_url('download_report') }}"  method="post">
+                                <form action="{{ reverse_url('report_download', rid=tdoc['_id']) }}"  method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ handler.csrf_token }}">
                                     <button type="submit" name="download_report" value="your_value" class="expanded button">{{ _('Download Your Report') }}</button>
                                 </form>
 {#                            <p><a href="{{ reverse_url('download_report') }}" class="expanded button">{{ _('Download Your Report') }}</a></p>#}

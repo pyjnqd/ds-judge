@@ -9,10 +9,10 @@ Accepted: 已通过
 Accepted Ratio: 通过率
 Active Sessions: 活动会话
 Arguments: 参数
-Attend Contest: 参加比赛
+Attend Contest: 参加实验
 Attended: 已参加
-Login to Attend Contest: 登录后参加比赛
-No Permission to Attend Contest: 您没有权限参加比赛
+Login to Attend Contest: 登录后参加实验
+No Permission to Attend Contest: 您没有权限参加实验
 Begin Date: 开始日期
 Begin Time: 开始时间
 Belongs to: 属于
@@ -34,18 +34,18 @@ Code: 代码
 Comments: 评论
 Contact Us: 联系我们
 Content: 内容
-Contest Scoreboard: 比赛成绩表
-contest_main: 比赛
-contest_create: 创建比赛
-contest_edit: 编辑比赛
-contest_scoreboard: 比赛成绩表
-contest_detail_problem_submit: 递交比赛题目
+Contest Scoreboard: 实验成绩表
+contest_main: 实验
+contest_create: 创建实验
+contest_edit: 编辑实验
+contest_scoreboard: 实验成绩表
+contest_detail_problem_submit: 递交实验题目
 Create: 创建
-Create Contest: 创建比赛
+Create Contest: 创建实验
 Create Discussion: 创建讨论
 Create Discussion in {0}: 在 {0} 下创建讨论
 Create Problem: 创建题目
-Create a contest: 创建一个比赛
+Create a contest: 创建一个实验
 Create a Discussion: 创建一个讨论
 Login to Create a Discussion: 登录后创建讨论
 No Permission to Create a Discussion: 您没有权限创建讨论
@@ -353,9 +353,9 @@ Discussion {1} not found.: 讨论 {1} 不存在。
 Message {0} not found.: 消息 {0} 不存在。
 Domain {0} not found.: 域 {0} 不存在。
 Domain {0} already exists.: 域 {0} 已经存在。
-You've already attended this contest.: 您已经参加本次比赛。
-You haven't attended this contest yet.: 您还没有参加本次比赛。
-Contest scoreboard is not visible.: 当前比赛成绩表隐藏，暂不可显示。
+You've already attended this contest.: 您已经参加本次实验。
+You haven't attended this contest yet.: 您还没有参加本次实验。
+Contest scoreboard is not visible.: 当前实验成绩表隐藏，暂不可显示。
 Problem {1} not found.: 题目 {1} 不存在。
 Training requirement is not satisfied.: 不满足训练条件。
 Record {0} not found.: 记录 {0} 不存在。
@@ -375,12 +375,12 @@ Not Attended: 未参加
 Live...: 正在进行…
 Ready (☆▽☆): 马上开始 (☆▽☆)
 View Details: 查看详情
-All Contests: 所有比赛
-Edit Contest: 编辑比赛
+All Contests: 所有实验
+Edit Contest: 编辑实验
 No Submissions: 没有递交
 Do not discuss solutions otherwise you will be regarded as cheating and then lose qualifications.: 请勿讨论解法，否则以作弊论处并且将失去参赛资格。
-Please attend contest to see the problems.: 请参加比赛来查看题目。
-This contest is not live.: 比赛没有开始。
+Please attend contest to see the problems.: 请参加实验来查看题目。
+This contest is not live.: 实验没有开始。
 Host: 主持人
 Rank: 排名
 Solve: 解决
@@ -458,11 +458,11 @@ Edit discussion replies of own discussion: 修改自己讨论中的回复
 Delete discussion replies: 删除讨论回复
 Delete own discussion replies: 删除讨论中自己的回复
 Delete discussion replies of own discussion: 删除自己讨论中的回复
-View contests: 查看比赛
-View contest scoreboard: 查看比赛成绩表
-View hidden contest submission status and scoreboard: 查看隐藏的比赛递交状态和成绩表
-Create contests: 创建比赛
-Attend contests: 参加比赛
+View contests: 查看实验
+View contest scoreboard: 查看实验成绩表
+View hidden contest submission status and scoreboard: 查看隐藏的实验递交状态和成绩表
+Create contests: 创建实验
+Attend contests: 参加实验
 View training plans: 查看训练计划
 View ranking: 查看排名
 Have ALL PERMISSIONS in this domain: 在此域中拥有全部权限
@@ -491,10 +491,10 @@ Dataset: 测试数据
 Upload: 上传
 No dataset at present.: 暂无测试数据。
 All: 全部
-All {0} Contests: 所有 {0} 比赛
+All {0} Contests: 所有 {0} 实验
 Show: 显示
-There are no contests...: 没有比赛…
-View Contest: 查看比赛
+There are no contests...: 没有实验…
+View Contest: 查看实验
 Cancel Score: 取消成绩
 score canceled: 成绩取消
 You have permissions to create problems for this domain.: 您有权限为此域创建题目。
@@ -529,7 +529,7 @@ perm_problem: 题库
 perm_record: 记录
 perm_problem_solution: 题解
 perm_discussion: 讨论
-perm_contest: 比赛
+perm_contest: 实验
 perm_homework: 作业
 perm_training: 训练
 perm_ranking: 排名
@@ -569,7 +569,7 @@ IO: 输入输出
 Judge Status: 评测状态
 Compile Error: 编译错误
 Training: 训练
-Contest: 比赛
+Contest: 实验
 Homework: 作业
 RP Algorithm: RP 算法
 Difficulty Algorithm: 难度算法
@@ -577,7 +577,7 @@ Dataset Format: 测试数据集格式
 Forgot Password and/or Username: 忘记密码和/或用户名
 Reset Password or Find Username: 重置密码或找回用户名
 '{0} discussions': '{0} 条讨论'
-In following contests: 在下列比赛中
+In following contests: 在下列实验中
 View Owned Problems: 查看自己的题目
 Completed: 已完成
 Enrollees: 参加人数
@@ -621,7 +621,7 @@ Total: 总计
 Filter: 过滤
 By Username / UID: 由用户名或 UID
 By Problem: 由题目
-By Contest: 由比赛
+By Contest: 由实验
 Reset: 重置
 Data of problem {1} not found.: 题目 {1} 的数据未找到。
 Data of record {0} not found.: 记录 {0} 的数据未找到。
@@ -686,7 +686,7 @@ Introduce must not exceed 500 characters and it will be shown in the list view.:
 Hint: 提示
 An example of dataset: 测试数据集的一个例子
 Open in Problem Set: 在题库中打开
-You cannot submit for this problem because the contest is ended. You can click "Open in Problem Set" to view this problem in normal mode.: 该比赛已结束，您无法在比赛模式下递交该题目。您可以点击“在题库中打开”以普通模式查看和递交本题。
+You cannot submit for this problem because the contest is ended. You can click "Open in Problem Set" to view this problem in normal mode.: 该实验已结束，您无法在实验模式下递交该题目。您可以点击“在题库中打开”以普通模式查看和递交本题。
 Recent Submissions: 最近递交
 Oh, the user hasn't submitted yet!: 这个用户还没有交过题 _(:зゝ∠)_
 Oh, the user hasn't created any discussions yet!: 这个用户还没有发布过讨论
@@ -695,8 +695,8 @@ Oh, the user doesn't have any contributions!: 啊哦，这个用户还没贡献�
 Recent Solutions: 最近编写的题解
 Most Upvoted Solutions: 最被赞同的题解
 The user is too lazy to leave something here...: 该用户太懒，这里啥也没写 (´・ω・｀)
-Edit any contests: 修改任意的比赛
-Edit own contests: 修改自己的比赛
+Edit any contests: 修改任意的实验
+Edit own contests: 修改自己的实验
 Export as CSV: 导出为 CSV
 Export as HTML: 导出为 HTML
 Export All Code: 导出所有代码
@@ -800,17 +800,18 @@ Sorry, there is no user in this domain.: 此域中目前没有用户。
 Reports: 实验报告
 Upload Report: 上传报告
 'Current report: {0}': '当前实验报告: {0}'
-Update report: 更新报告
+Update report: 上传实验报告
 Report create: 创建实验报告
 Report_id: 实验序号
 report_id: 实验序号
 Course: 课程
 course: 课程
 This experiment has expired.: 此实验已结束
-Download Your Report: 下载最近一次上传的报告
+Download Your Report: 下载最后上传的报告
 Please login to see details.: 请登陆后查看详细内容
 View Report: 查看实验
 Edit Report: 修改实验
 report_edit: 修改实验
-report_main: 所有实验
+report_main: 实验报告
 report_detail: 实验详情
+Report Introduction: 实验内容
