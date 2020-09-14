@@ -6,7 +6,7 @@
         <div class="medium-9 columns">
             <div class="section">
                 <div class="section__header">
-                    <h1 class="section__title">{{ _('Homework Introduction') }}</h1>
+                    <h1 class="section__title">{{ _('Report Introduction') }}</h1>
                 </div>
                 <div class="section__body typo">
                     {{ tdoc['content']|markdown }}
@@ -16,8 +16,6 @@
                 <div class="section__header">
                     <h1 class="section__title">{{ _('Reports') }}</h1>
                 </div>
-
-
                 {% if handler.is_not_started(tdoc) %}
                     {{ nothing.render('This homework is not open and you cannot view problems.') }}
                 {% elif handler.user['_id'] == 1 %}
@@ -25,9 +23,9 @@
                 {% else %}
                     {% if not handler.is_done(tdoc) %}
                         <div class="section__body">
-                            <form method="post" action="/report/{{ tdoc['_id'] }}/upload" target="_self" enctype="multipart/form-data">
-                                    <p>{{ _('Current report: {0}').format(pdoc['data']|default(_('(None)'))) }}</p>
-
+                            <form method="post" action="/report/{{ tdoc['_id'] }}/upload" target="_self"
+                                  enctype="multipart/form-data">
+                                <p>{{ _('Current report: {0}').format(pdoc['data']|default(_('(None)'))) }}</p>
                                 <p>
                                     {{ _('Update report') }}:
                                     <input type="hidden" name="csrf_token" value="{{ handler.csrf_token }}">
@@ -35,13 +33,17 @@
                                     <input type="submit" value="{{ _('Upload') }}" class="rounded primary button">
                                 </p>
                             </form>
-                            <p class="help-text">{{ _('Hint') }}: <a href="{{ reverse_url('wiki_help') }}#upload">{{ _('Dataset Format') }}</a>, {{ _('An example of dataset') }}: <a href="https://github.com/vijos/jd4/blob/master/jd4/testdata/aplusb-legacy.zip?raw=true">{{ _('Download') }}</a></p>
+                            <p class="help-text">{{ _('Hint') }}: <a
+                                    href="{{ reverse_url('wiki_help') }}#upload">{{ _('Dataset Format') }}</a>, {{ _('An example of dataset') }}:
+                                <a href="https://github.com/vijos/jd4/blob/master/jd4/testdata/aplusb-legacy.zip?raw=true">{{ _('Download') }}</a>
+                            </p>
                             {% if pdoc %}
-                                <form action="{{ reverse_url('report_download', rid=tdoc['_id']) }}"  method="post">
+                                <form action="{{ reverse_url('report_download', rid=tdoc['_id']) }}" method="post">
                                     <input type="hidden" name="csrf_token" value="{{ handler.csrf_token }}">
-                                    <button type="submit" name="download_report" value="your_value" class="expanded button">{{ _('Download Your Report') }}</button>
+                                    <button type="submit" name="download_report" value="your_value"
+                                            class="expanded button">{{ _('Download Your Report') }}</button>
                                 </form>
-{#                            <p><a href="{{ reverse_url('download_report') }}" class="expanded button">{{ _('Download Your Report') }}</a></p>#}
+                                {#                            <p><a href="{{ reverse_url('download_report') }}" class="expanded button">{{ _('Download Your Report') }}</a></p>#}
                             {% endif %}
                         </div>
                     {% else %}

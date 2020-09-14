@@ -2,6 +2,7 @@ import datetime
 
 from pymongo import errors
 from pymongo import ReturnDocument
+from bson import objectid
 
 from vj4 import db
 from vj4 import error
@@ -19,7 +20,7 @@ PROJECTION_ALL = None
 
 
 @argmethod.wrap
-async def add(uid: int, uname: str, _class: str, year: int, name: str, password: str, mail: str, regip: str=''):
+async def add(uid: int, uname: str, _class: str, year: int, name: str, password: str, mail: str, group: str='', regip: str=''):
   """Add a user."""
   validator.check_uname(uname)
   # TODO(iceboy): Filter uname by keywords.
@@ -44,6 +45,7 @@ async def add(uid: int, uname: str, _class: str, year: int, name: str, password:
                            'name': name,
                            'mail': mail,
                            'mail_lower': mail_lower,
+                           'group': group,
                            'salt': salt,
                            'hash': pwhash.hash_vj4(password, salt),
                            'regat': datetime.datetime.utcnow(),

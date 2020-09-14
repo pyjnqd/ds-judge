@@ -1,0 +1,45 @@
+{% extends "layout/basic.html" %}
+{#{% import "components/record.html" as record with context %}#}
+{#{% import "components/problem.html" as problem with context %}#}
+{% block content %}
+    <div class="row">
+        <div class="medium-9 columns">
+        {% if handler.has_perm(vj4.model.builtin.PERM_READ_RECORD_CODE) %}
+            <div class="section" data-heading-extract-to="#menu-item-home_{{ category }}">
+              <form method="post">
+
+                <div class="section__header">
+                  <h1 class="section__title" id="setting_download" data-heading>{{ _('Download Setting') }}</h1>
+                </div>
+                <div class="section__body">
+                {% for setting in settings %}
+
+                  {{ form.form_select(
+                    options=setting.range.items(),
+                    label=setting.name,
+                    help_text=setting.desc,
+                    name=setting.key,
+                    value=setting.default)
+                  }}
+{#                    {{ form.form_select(#}
+{#                    options=setting['range'].items(),#}
+{#                    label=setting['name'],#}
+{#                    help_text=setting['desc'],#}
+{#                    name=setting['key'],#}
+{#                    value=setting['default']) }}#}
+{##}
+                {% endfor %}
+                </div>
+                <div class="section__body">
+                  <input type="hidden" name="csrf_token" value="{{ handler.csrf_token }}">
+                  <input type="submit" class="rounded primary button" value="{{ _('Download Reports') }}">
+                </div>
+              </form>
+            </div>
+        {% endif %}
+        </div>
+        <div class="medium-3 columns">
+            {% include "partials/report_sidebar.html" %}
+        </div>
+    </div>
+{% endblock %}

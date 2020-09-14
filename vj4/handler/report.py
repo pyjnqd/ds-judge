@@ -26,6 +26,7 @@ from aiohttp import web
 from vj4.db import mdb
 from vj4.model import fs
 from vj4.model.report import report_rename
+from vj4.model.adaptor.setting import Setting
 
 
 # @app.route('/report', 'report_main')
@@ -266,7 +267,10 @@ class ReportUploadHandler(base.Handler):
     ureport = mdb.ureport.find_one({'user_id': uid, 'report_id': report_id})
     pdoc = None
     if ureport:
-      os.unlink('data/%s' % ureport['data'])
+      try:
+        os.unlink('data/%s' % ureport['data'])
+      except FileNotFoundError as e:
+        pass
       pdoc = mdb.ureport.update_one({'user_id': uid, 'report_id': report_id}, {"$set": {"data": file_name, "upload_time": upload_time}})
     else:
       pdoc = mdb.ureport.insert_one({
@@ -296,7 +300,7 @@ class ReportUploadHandler(base.Handler):
     # if pdoc.get('data') and type(pdoc['data']) is objectid.ObjectId:
     #   await fs.unlink(pdoc['data'])
     # await problem.set_data(self.domain_id, pid, file)
-    self.json_or_redirect(self.reverse_url('report_detail', rid=rid, ))
+    self.json_or_redirect(self.reverse_url('report_detail', rid=rid))
 
 
 @app.route('/report/{rid:\w{24}}/edit', 'report_edit')
@@ -370,3 +374,86 @@ class ReportEditHandler(contest.ContestMixin, base.Handler):
 
     pdoc = mdb.ureport.find_one({'user_id': self.user['_id'], 'report_id': rid})
     self.json_or_redirect(self.reverse_url('report_detail', rid=rid))
+
+
+@app.route('/report/{rid}/gather', 'report_gather')
+class ReportCodeHandler(contest.ContestMixin, base.Handler):
+  @base.route_argument
+  @base.require_perm(builtin.PERM_VIEW_HOMEWORK)
+  @base.require_perm(builtin.PERM_READ_RECORD_CODE)
+  @base.sanitize
+  async def get(self, rid: objectid.ObjectId):
+    # Report Download Settings
+    # rid = objectid.ObjectId("5f5cc9314e26cb78f6bd108b")
+    ureports = mdb.ureport.find({"report_id": rid})
+
+    all_uid = set()
+    all_year = set()
+    all_group = set()
+    all_class = set()
+    all_uid.add("All")
+    all_year.add("All")
+    all_group.add("All")
+    all_class.add("All")
+
+    for ureport in ureports:
+      all_uid.add(ureport['user_id'])
+      this_user =  mdb.user.find_one({'_id': ureport['user_id']})
+      all_year.add(this_user['year'])
+      all_group.add(this_user['group'])
+      all_class.add(this_user['_class'])
+
+    all_uid = {r: r for i, r in enumerate(all_uid)}
+    all_year = {r: r for i, r in enumerate(all_year)}
+    all_group = {r: r for i, r in enumerate(all_group)}
+    all_class = {r: r for i, r in enumerate(all_class)}
+
+    download_settings = [
+      Setting('setting_download', 'uid', str,
+                range=all_uid,
+                default="All", ui='select', name='By id'),
+      Setting('setting_download', 'year', str,
+              range=all_year,
+              default="All", ui='select', name='By year'),
+      Setting('setting_download', '_class', int, range=all_class,
+              ui='select', name='By class', default="All",
+              desc='By class'),
+      Setting('setting_download', 'group', str, range=all_group,
+              ui='select', name='By group',default="All"),
+    ]
+    report = mdb.report.find_one({'_id': rid})
+    self.render('report_download.html', category='report_download', settings=download_settings, tdoc=report)
+
+  @base.route_argument
+  @base.post_argument
+  @base.require_csrf_token
+  @base.require_perm(builtin.PERM_VIEW_HOMEWORK)
+  @base.require_perm(builtin.PERM_READ_RECORD_CODE)
+  @base.sanitize
+  async def post(self, rid: objectid.ObjectId, uid: str, year: str, _class: str, group: str):
+    report_filter = {}
+
+    user_filters = {}
+    if year != "All":
+      user_filters["year"] = year
+    if _class != "All":
+      user_filters["_class"] = _class
+    if group != "All":
+      user_filters["group"] = group
+    all_users = mdb.user.find(user_filters)
+    all_user_ids = [tuser["_id"] for tuser in all_users]
+
+    all_reports = mdb.ureport.find({"report_id": rid, "user_id": {"$in": all_user_ids}})
+    print(all_reports)
+    output_buffer = io.BytesIO()
+    zip_file = zipfile.ZipFile(output_buffer, 'a', zipfile.ZIP_DEFLATED)
+    for report in all_reports:
+      file_name = report['data']
+      with open("data/%s" % file_name, "rb") as f:
+        zip_file.writestr(file_name, f.read())
+
+    for zfile in zip_file.filelist:
+      zfile.create_system = 0
+    zip_file.close()
+    await self.binary(output_buffer.getvalue(), 'application/zip',
+                      file_name='Archive.zip')

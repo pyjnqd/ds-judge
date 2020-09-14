@@ -6,7 +6,7 @@
     <div class="section__body">
       <h1>{{ tdoc['title'] }}</h1>
       <div class="contest-sidebar__status">
-      {% if attended %}
+      {% if True %}
         <span class="icon icon-check"></span> {{ _('Claimed') }}
       {% else %}
         <span class="icon icon-schedule"></span> {{ _('Not Claimed') }}
@@ -57,11 +57,11 @@
         <span class="icon icon-edit"></span>  {{ _('Edit Report') }}
       </a></li>
     {% endif %}
-{#    {% if handler.has_perm(vj4.model.builtin.PERM_READ_RECORD_CODE) %}#}
-{#      <li class="menu__item"><a class="menu__link" href="{{ reverse_url('homework_code', rid=tdoc['_id']) }}">#}
-{#        <span class="icon icon-download"></span> {{ _('Export All Code') }}#}
-{#      </a></li>#}
-{#    {% endif %}#}
+    {% if handler.has_perm(vj4.model.builtin.PERM_READ_RECORD_CODE) %}
+      <li class="menu__item"><a class="menu__link" href="{{ reverse_url('report_gather', rid=tdoc['_id']) }}">
+        <span class="icon icon-download"></span> {{ _('Download reports') }}
+      </a></li>
+    {% endif %}
 {#    {% if attended %}#}
 {#      <li class="menu__item"><a class="menu__link" href="{{ reverse_url('record_main') }}?uid_or_name={{ handler.user['_id'] }}&tid={{ tdoc['doc_id'] }}">#}
 {#        <span class="icon icon-flag"></span> {{ _('My Recent Submissions') }}#}
