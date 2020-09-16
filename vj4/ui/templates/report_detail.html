@@ -33,9 +33,8 @@
                                     <input type="submit" value="{{ _('Upload') }}" class="rounded primary button">
                                 </p>
                             </form>
-                            <p class="help-text">{{ _('Hint') }}: <a
-                                    href="{{ reverse_url('wiki_help') }}#upload">{{ _('Dataset Format') }}</a>, {{ _('An example of dataset') }}:
-                                <a href="https://github.com/vijos/jd4/blob/master/jd4/testdata/aplusb-legacy.zip?raw=true">{{ _('Download') }}</a>
+                            <p class="help-text">{{ _('report template') }}:
+                                <a href="https://github.com/ZhaoChuyang/ds-judge/blob/master/resource/ds_template.docx?raw=true">{{ _('Download') }}</a>
                             </p>
                             {% if pdoc %}
                                 <form action="{{ reverse_url('report_download', rid=tdoc['_id']) }}" method="post">
