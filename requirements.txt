@@ -14,3 +14,4 @@ PyYAML
 aiomongo
 yarl
 aiohttp-sentry
+aiofile

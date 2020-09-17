@@ -7,6 +7,7 @@ import pytz
 import yaml
 import zipfile
 from bson import objectid
+from aiofile import AIOFile
 
 from vj4 import app
 from vj4 import constant
@@ -237,7 +238,7 @@ class ReportUploadHandler(base.Handler):
   @base.sanitize
   async def post(self, *, rid: str):
     data = await self.request.post()
-    file = data['file']
+    file = data.get('file')
     file_data = file.file
     file_name = file.filename
     file_extension = file_name.split(".")[-1]
@@ -261,9 +262,6 @@ class ReportUploadHandler(base.Handler):
     if report_rename(student, this_report, file_extension) is not None:
       file_name = report_rename(student, this_report, file_extension)
 
-    with open('data/%s' % file_name, 'wb') as f:
-      f.write(file_data.read())
-
     ureport = mdb.ureport.find_one({'user_id': uid, 'report_id': report_id})
     pdoc = None
     if ureport:
@@ -280,6 +278,10 @@ class ReportUploadHandler(base.Handler):
         'data': file_name,
         'upload_time': upload_time})
 
+    buffer = io.BytesIO(file_data.read())
+
+    async with AIOFile('data/%s' % file_name, 'wb') as fb:
+      await fb.write(buffer.getvalue())
 
     # if report.report_rename(student, report) is not None:
     #   file_name = report.report_rename(student, report)
